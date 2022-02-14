@@ -8,8 +8,12 @@
 # (so be sure to read the docstrings!)
 
 import random
+from matplotlib.style import available
 
-WORDLIST_FILENAME = "words.txt"
+from sqlalchemy import false
+from sympy import sec
+
+WORDLIST_FILENAME = "C:/Users/Wenhao/Documents/edX/words.txt"
 
 def loadWords():
     """
@@ -51,7 +55,13 @@ def isWordGuessed(secretWord, lettersGuessed):
       False otherwise
     '''
     # FILL IN YOUR CODE HERE...
-
+    guessed=True
+    for c in secretWord:
+      if c not in lettersGuessed:
+        guessed=False
+        break
+    
+    return guessed
 
 
 def getGuessedWord(secretWord, lettersGuessed):
@@ -62,7 +72,13 @@ def getGuessedWord(secretWord, lettersGuessed):
       what letters in secretWord have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE...
-
+    guessed=''
+    for c in secretWord:
+      if c in lettersGuessed:
+        guessed += c
+      else:
+        guessed += '_ '
+    return guessed
 
 
 def getAvailableLetters(lettersGuessed):
@@ -72,6 +88,11 @@ def getAvailableLetters(lettersGuessed):
       yet been guessed.
     '''
     # FILL IN YOUR CODE HERE...
+    import string
+    available = string.ascii_lowercase
+    for c in lettersGuessed:
+      available = available.replace(c,'')
+    return available
     
 
 def hangman(secretWord):
@@ -95,9 +116,34 @@ def hangman(secretWord):
     Follows the other limitations detailed in the problem write-up.
     '''
     # FILL IN YOUR CODE HERE...
+    print('Welcome to the game Hangman!')
+    print("I'm thinking of a word that is {} letters long.".format(len(secretWord)))
+    lettersGuessed=[]
+    tries=8
 
-
-
+    while tries>0:
+      print('-------------')
+      print('You have {} guesses left.'.format(tries))
+      print('Available Letters: {}'.format(getAvailableLetters(lettersGuessed)))
+      guess = input('Please guess a letter: ').lower()
+      if guess not in lettersGuessed:
+        lettersGuessed.append(guess)
+        if guess in secretWord:
+          print("Good guess: {}".format(getGuessedWord(secretWord,lettersGuessed)))
+        else:
+          tries -= 1
+          print('Oops! That letter is not in my word: {}'.format(getGuessedWord(secretWord,lettersGuessed)))
+      else:
+        print("Oops! You've already guessed that letter: {}".format(getGuessedWord(secretWord,lettersGuessed)))
+      if isWordGuessed(secretWord,lettersGuessed):
+        print('-------------')
+        break
+    
+    if isWordGuessed(secretWord,lettersGuessed):
+      print('Congratulations, you won!')
+    else:
+      print('-------------')
+      print('Sorry, you ran out of guesses. The word was {}'.format(secretWord))
 
 
 
@@ -107,3 +153,4 @@ def hangman(secretWord):
 
 # secretWord = chooseWord(wordlist).lower()
 # hangman(secretWord)
+# hangman('apple')
