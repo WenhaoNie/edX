@@ -1,35 +1,29 @@
-animals = { 'a': ['aardvark'], 'b': ['baboon'], 'c': ['coati']}
+class Coordinate(object):
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
 
-animals['d'] = ['donkey']
-animals['d'].append('dog')
-animals['d'].append('dingo')
+    def getX(self):
+        # Getter method for a Coordinate object's x coordinate.
+        # Getter methods are better practice than just accessing an attribute directly
+        return self.x
 
-def how_many(aDict):
-    '''
-    aDict: A dictionary, where all the values are lists.
+    def getY(self):
+        # Getter method for a Coordinate object's y coordinate
+        return self.y
 
-    returns: int, how many values are in the dictionary.
-    '''
-    # Your Code Here
-    result=0
-    for value in aDict.values():
-        result += len(value)
+    def __str__(self):
+        return '<' + str(self.getX()) + ',' + str(self.getY()) + '>'
+        
+    def __eq__(self,other):
+        return (self.getX() == other.getX()) & (self.getY() == other.getY())
     
-    return result
+    def __repr__(self):
+        return "Coordinate(%d,%d)" % (self.getX(), self.getY())
 
-print(how_many(animals))
-
-def biggest(aDict):
-    '''
-    aDict: A dictionary, where all the values are lists.
-
-    returns: The key with the largest number of values associated with it
-    '''
-    # Your Code Here
-    biggest=0
-    biggestkey=list(aDict.keys())[0]
-    for key in aDict:
-        if len(aDict[key])>biggest:
-            biggest=len(aDict[key])
-            biggestkey=key
-    return biggestkey
+class __main__():
+    c1 = Coordinate(1,-8)
+    c2 = Coordinate(1,-8)
+    print(c1)
+    print(c2)
+    print(c1 == c2)
