@@ -85,15 +85,16 @@ class Hand(object):
         returns: Boolean (if the word was or was not made)
         """
         # Your code here
+        has_word = True
         temp_hand = self.hand.copy()
         for c in word:
-            try:
-                temp_hand[c] = temp_hand[c] - 1
-            except:
-                return False
+            if temp_hand.get(c,0)>0:
+                temp_hand[c] -= 1
+            else:
+                has_word = False
         
-        self.hand = temp_hand
-        return True
+        if(has_word): self.hand = temp_hand
+        return has_word
         raise NotImplementedError()
 
     
