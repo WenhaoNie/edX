@@ -1,29 +1,14 @@
-class Coordinate(object):
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-
-    def getX(self):
-        # Getter method for a Coordinate object's x coordinate.
-        # Getter methods are better practice than just accessing an attribute directly
-        return self.x
-
-    def getY(self):
-        # Getter method for a Coordinate object's y coordinate
-        return self.y
-
-    def __str__(self):
-        return '<' + str(self.getX()) + ',' + str(self.getY()) + '>'
-        
-    def __eq__(self,other):
-        return (self.getX() == other.getX()) & (self.getY() == other.getY())
-    
-    def __repr__(self):
-        return "Coordinate(%d,%d)" % (self.getX(), self.getY())
-
-class __main__():
-    c1 = Coordinate(1,-8)
-    c2 = Coordinate(1,-8)
-    print(c1)
-    print(c2)
-    print(c1 == c2)
+# generate all combinations of N items
+def powerSet(items):
+    N = len(items)
+    # enumerate the 2**N possible combinations
+    for i in range(3**N):
+        bag1 = []
+        bag2 = []
+        for j in range(N):
+            # test bit jth of integer i
+            if (i >> j) % 3 == 1:
+                bag1.append(items[j])
+            elif (i >> j) % 3 == 2:
+                bag2.append(items[j])
+        yield (bag1, bag2)
