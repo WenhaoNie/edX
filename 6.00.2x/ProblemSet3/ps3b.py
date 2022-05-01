@@ -195,8 +195,23 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     """
 
     # TODO
-
-
+    timeStep = 300
+    popSize_Total = [0] * timeStep #list of popSize add up ordered by time
+    for n in range(numTrials):
+        viruses = []
+        for v in range(numViruses):
+            viruses.append(SimpleVirus(maxBirthProb,clearProb))
+        patient = Patient(viruses,maxPop)
+        for t in range(timeStep):
+            popSize_Total[t] += patient.update()
+    
+    avePopSize = [x / numTrials for x in popSize_Total]
+    pylab.plot(avePopSize, label = "SimpleVirus")
+    pylab.title("SimpleVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend(loc = "best")
+    pylab.show()
 
 #
 # PROBLEM 3
@@ -225,6 +240,9 @@ class ResistantVirus(SimpleVirus):
         """
 
         # TODO
+        SimpleVirus.__init__(self,maxBirthProb,clearProb)
+        self.resistances = resistances
+        self.mutProb = mutProb
 
 
     def getResistances(self):
@@ -232,12 +250,14 @@ class ResistantVirus(SimpleVirus):
         Returns the resistances for this virus.
         """
         # TODO
+        return self.resistances
 
     def getMutProb(self):
         """
         Returns the mutation probability for this virus.
         """
         # TODO
+        return self.mutProb
 
     def isResistantTo(self, drug):
         """
@@ -252,7 +272,10 @@ class ResistantVirus(SimpleVirus):
         """
         
         # TODO
-
+        try:
+            return self.getResistances()[drug]
+        except KeyError:
+            return False
 
     def reproduce(self, popDensity, activeDrugs):
         """
@@ -300,7 +323,20 @@ class ResistantVirus(SimpleVirus):
         """
 
         # TODO
-
+        resist = True
+        for drug in activeDrugs:
+            if not self.getResistances()[drug]:
+                resist = False
+        
+        if random.random() < self.getMaxBirthProb() * (1-popDensity) and resist:
+            osResistances = self.getResistances().copy()
+            for drug in osResistances.keys():
+                if random.random() < self.getMutProb():
+                    osResistances[drug] = not osResistances[drug]
+            return ResistantVirus(self.getMaxBirthProb(),self.getClearProb(),
+                                    osResistances,self.getMutProb())
+        else:
+            raise NoChildException
             
 
 class TreatedPatient(Patient):
