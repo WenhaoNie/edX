@@ -483,3 +483,29 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     """
 
     # TODO
+    timeStep = 300 # 150 + 150
+    stepToAddDrug = 150
+    drugToAdd = 'guttagonol'
+    popSize_total = [0]*timeStep
+    rePopSize_total = [0]*timeStep
+    
+    for n in range(numTrials):
+        viruses = []
+        for v in range(numViruses):
+            viruses.append(ResistantVirus(maxBirthProb,clearProb,resistances,mutProb))
+        patient = TreatedPatient(viruses,maxPop)
+        for t in range(timeStep):
+            if t == stepToAddDrug:
+                patient.addPrescription(drugToAdd)
+            popSize_total[t] += patient.update()
+            rePopSize_total[t] += patient.getResistPop([drugToAdd])
+        
+    avePopSize = [x / numTrials for x in popSize_total]
+    aveRePopSize = [x / numTrials for x in rePopSize_total]
+    pylab.plot(avePopSize, label = "Total_Virus")
+    pylab.plot(aveRePopSize, label = 'Resistant_Virus')
+    pylab.title("Resistant simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend(loc = "best")
+    pylab.show()
