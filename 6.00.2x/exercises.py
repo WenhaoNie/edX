@@ -13,14 +13,16 @@ def noReplacementSimulation(numTrials):
     for i in range(numTrials):
         balls = {0:'red',1:'red',2:'red',3:'green',4:'green',5:'green'}
         lastDraw = ''
-        curDraw = 0
-        for j in range(6):
+        sameColor = True
+        for j in range(3):
             draw = random.choice(list(balls.keys()))
-            if balls[draw] == lastDraw:
-                curDraw += 1
-            lastDraw = balls[draw]
+            if lastDraw == '':
+                lastDraw = balls[draw]
+            elif balls[draw] != lastDraw:
+                sameColor = False
+                break
             balls.pop(draw)
-        if curDraw >= 2:
+        if sameColor:
             numSuc += 1
     return numSuc/numTrials
 
