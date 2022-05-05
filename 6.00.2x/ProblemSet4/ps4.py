@@ -131,7 +131,10 @@ def generate_models(x, y, degs):
         that minimizes the squared error of the fitting polynomial
     """
     # TODO
-    pass
+    models = []
+    for d in degs:
+        models.append(np.polyfit(x,y,d))
+    return models
 
 # Problem 2
 def r_squared(y, estimated):
@@ -144,7 +147,13 @@ def r_squared(y, estimated):
         a float for the R-squared error term
     """
     # TODO
-    pass
+    mu = np.mean(y)
+    var_pre = 0
+    var_sa = 0
+    for i in range(len(y)):
+        var_pre += (y[i]-estimated[i])**2
+        var_sa += (y[i]-mu)**2
+    return 1-var_pre/var_sa
 
 # Problem 3
 def evaluate_models_on_training(x, y, models):
@@ -169,8 +178,14 @@ def evaluate_models_on_training(x, y, models):
         None
     """
     # TODO
-    pass
-
+    pylab.plot(x,y,'o',label = 'Data')
+    for m in models:
+        estYVals = np.polyval(m, x)
+        error = r_squared(y,estYVals)
+        pylab.plot(x,estYVals,'r',label = 'D'+str(len(m)-1)\
+            +', R2= '+str(round(error,3)))
+    pylab.legend(loc = 'best')
+    
 
 ### Begining of program
 raw_data = Climate('data.csv')
@@ -188,6 +203,7 @@ evaluate_models_on_training(x, y, models)
 x1 = INTERVAL_1
 x2 = INTERVAL_2
 y = []
-# MISSING LINES
+for year in INTERVAL_1:
+    y.append(np.mean(raw_data.get_yearly_temp('BOSTON', year)))
 models = generate_models(x, y, [1])    
 evaluate_models_on_training(x, y, models)
